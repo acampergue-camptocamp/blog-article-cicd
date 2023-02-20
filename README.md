@@ -39,11 +39,23 @@ This generic process is then implemented differently according to the language a
 
 ![Example of a Java/Maven Build with Helm/Helmfile deployment in Kubernetes](./C2C-Blog-article_source_code_to_deployed_app_example.png)
 
+## Detect vulnerabilities in the source code, SAST and DAST
 
+A lot of plugin and tools allow developers to search for potential issues before they occur.
+We speak mainly about Static Application Security Testing (SAST) and Dynamic Application Security Testing (DAST).
+The Static Security Testing consist of analysing the source code for known bad patterns and the dependencies for
+dependencies known to contain vulnerabilities.
+
+One of the most know being !(Sonarqube)[https://www.sonarsource.com/products/sonarqube/]
+![Gitlab](https://about.gitlab.com), an end-to-end software development platform, integrates natively security testing plugins which
+we just need to activate to get security results aggregated into the dedicated dashboard.
+
+// TODO include image of dashboard
+
+Those results can eventually be pulled via the Gitlab API and included into your own customized pipelines.
+Doing so, you can define your own ![quality gates](https://docs.sonarqube.org/latest/user-guide/quality-gates/)
 
 ## Build docker images with Kaniko
-
-## Detect vulnerabilities in the source code, SAST
 
 ## Detect vulnerabilities in the Docker containers
 
