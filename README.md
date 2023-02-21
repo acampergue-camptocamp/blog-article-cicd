@@ -46,7 +46,7 @@ We speak mainly about Static Application Security Testing (SAST) and Dynamic App
 The Static Security Testing consist of analysing the source code for known bad patterns and the dependencies for
 dependencies known to contain vulnerabilities.
 
-One of the most know being !(Sonarqube)[https://www.sonarsource.com/products/sonarqube/]
+One of the most know being ![Sonarqube](https://www.sonarsource.com/products/sonarqube/)
 ![Gitlab](https://about.gitlab.com), an end-to-end software development platform, integrates natively security testing plugins which
 we just need to activate to get security results aggregated into the dedicated dashboard.
 
@@ -64,6 +64,7 @@ building a Docker container in a docker container requires to bypass important s
 Moreover, Docker container runtime has been ![Deprecated by Kubernetes](https://kubernetes.io/blog/2020/12/02/dont-panic-kubernetes-and-docker/) and we need a solution to build such containers on top of container engines like ![Podman](https://podman.io/) or ![CRI-O](https://cri-o.io/).
 
 Luckily, Google released a tool named ![Kaniko](https://github.com/GoogleContainerTools/kaniko) that we can easily ![use from Gitlab](https://docs.gitlab.com/ee/ci/docker/using_kaniko.html)
+
 ## Detect vulnerabilities in the Docker containers
 
 ## Manage Docker build dependencies
