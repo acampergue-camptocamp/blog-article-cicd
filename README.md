@@ -57,9 +57,9 @@ Doing so, you can define your own ![quality gates](https://docs.sonarqube.org/la
 
 ## Build docker images with Kaniko
 
-Building docker images became a very common task in modern development environments.
+Building Docker images became a very common task in modern development environments.
 Since the development environments are often hosted on Docker environments, we regularly face Docker in Docker issues:
-building a Docker container in a docker container requires to bypass important security features and is therefore unsafe.
+building a Docker container in a Docker container requires to bypass important security features and is therefore unsafe.
 
 Moreover, Docker container runtime has been ![Deprecated by Kubernetes](https://kubernetes.io/blog/2020/12/02/dont-panic-kubernetes-and-docker/) and we need a solution to build such containers 
 on top of container engines like ![Podman](https://podman.io/) or ![CRI-O](https://cri-o.io/).
