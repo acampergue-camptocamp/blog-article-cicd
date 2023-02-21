@@ -46,9 +46,9 @@ We speak mainly about Static Application Security Testing (SAST) and Dynamic App
 The Static Security Testing consist of analysing the source code for known bad patterns and the dependencies for
 dependencies known to contain vulnerabilities.
 
-One of the most know being ![Sonarqube](https://www.sonarsource.com/products/sonarqube/)
-![Gitlab](https://about.gitlab.com), an end-to-end software development platform, integrates natively security testing plugins which
-we just need to activate to get security results aggregated into the dedicated dashboard.
+One of the most know static analysis application is ![Sonarqube](https://www.sonarsource.com/products/sonarqube/). This is a standalone application that can be linked with an
+existing development environment. ![Gitlab](https://about.gitlab.com), an end-to-end software development platform, integrates natively security testing
+plugins which we just need to activate to get security results aggregated into the dedicated dashboard.
 
 // TODO include image of dashboard
 
@@ -61,9 +61,16 @@ Building docker images became a very common task in modern development environme
 Since the development environments are often hosted on Docker environments, we regularly face Docker in Docker issues:
 building a Docker container in a docker container requires to bypass important security features and is therefore unsafe.
 
-Moreover, Docker container runtime has been ![Deprecated by Kubernetes](https://kubernetes.io/blog/2020/12/02/dont-panic-kubernetes-and-docker/) and we need a solution to build such containers on top of container engines like ![Podman](https://podman.io/) or ![CRI-O](https://cri-o.io/).
+Moreover, Docker container runtime has been ![Deprecated by Kubernetes](https://kubernetes.io/blog/2020/12/02/dont-panic-kubernetes-and-docker/) and we need a solution to build such containers 
+on top of container engines like ![Podman](https://podman.io/) or ![CRI-O](https://cri-o.io/).
 
 Luckily, Google released a tool named ![Kaniko](https://github.com/GoogleContainerTools/kaniko) that we can easily ![use from Gitlab](https://docs.gitlab.com/ee/ci/docker/using_kaniko.html)
+
+To simplify the whole process and allow developers to specify their build parameters in a convenient way, we developed a
+custom process that analyzes the `docker-compose.yaml` to extract the build information : image name, image tag, build variables, etc.
+Once the required information are acquired, we create a ![dynamic child pipeline](https://docs.gitlab.com/ee/ci/pipelines/downstream_pipelines.html#dynamic-child-pipelines) which is gonna take care of the build of the image.
+
+Dynamic Child Pipelines is a version of child pipelines wherein the child pipeline can be generated within a job or a set of jobs in the parent pipeline. The parent pipeline must put the generated CI configuration in an artifact, and then the trigger job refers to that artifact to tell the CI system what to run.
 
 ## Detect vulnerabilities in the Docker containers
 
@@ -71,6 +78,6 @@ Luckily, Google released a tool named ![Kaniko](https://github.com/GoogleContain
 
 ## Improve Java builds with build caches
 
-# What could be imroved
+# What could be improved
 
 Test environments dynamically created for each test, each branch, each feature, each bug fix
