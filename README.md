@@ -61,20 +61,28 @@ Building Docker images became a very common task in modern development environme
 Since the development environments are often hosted on Docker environments, we regularly face Docker in Docker issues:
 building a Docker container in a Docker container requires to bypass important security features and is therefore unsafe.
 
-Moreover, Docker container runtime has been ![Deprecated by Kubernetes](https://kubernetes.io/blog/2020/12/02/dont-panic-kubernetes-and-docker/) and we need a solution to build such containers 
-on top of container engines like ![Podman](https://podman.io/) or ![CRI-O](https://cri-o.io/).
+Moreover, Docker container runtime has been ![Deprecated by Kubernetes](https://kubernetes.io/blog/2020/12/02/dont-panic-kubernetes-and-docker/) and we need a solution to build such containers on top of container engines like ![Podman](https://podman.io/) or ![CRI-O](https://cri-o.io/).
 
 Luckily, Google released a tool named ![Kaniko](https://github.com/GoogleContainerTools/kaniko) that we can easily ![use from Gitlab](https://docs.gitlab.com/ee/ci/docker/using_kaniko.html)
-
 To simplify the whole process and allow developers to specify their build parameters in a convenient way, we developed a
 custom process that analyzes the `docker-compose.yaml` to extract the build information : image name, image tag, build variables, etc.
 Once the required information are acquired, we create a ![dynamic child pipeline](https://docs.gitlab.com/ee/ci/pipelines/downstream_pipelines.html#dynamic-child-pipelines) which is gonna take care of the build of the image.
 
 Dynamic Child Pipelines is a version of child pipelines wherein the child pipeline can be generated within a job or a set of jobs in the parent pipeline. The parent pipeline must put the generated CI configuration in an artifact, and then the trigger job refers to that artifact to tell the CI system what to run.
 
+In a nutshell, our pipeline reads the docker-compose.yml file to get build information which will be passed to Kaniko in order the Build the Dockerfile present in your project.
+
 ## Detect vulnerabilities in the Docker containers
 
+Once built, our images are deployed to a ![quay](https://quay.io) repository. This tool already includes the feature of analysing the container layers against know vulnerabilities. In our pipelines, we implemented a python script which request the results of this analysis, what allow us to define some quality-gates in the deployment process. We can for example prevent any image with know severe vulnerabilities to be deployed in any of our environments.
+
 ## Manage Docker build dependencies
+
+Most of our projects create a Docker container. Some of them are based on images which you can find on ![dockerhub](https://hub.docker.com/) and some other are based on images we build internally. Every time a parent image is updated, we want to build a new version of the downstream image to make sure we include all the latest security patches.
+
+// TODO Reformulate next paragraph:
+To achieve this task, we created a Python tool which analyzes the list of projects that build containers and creates a build dependency tree by reverse engineering the list of Docker parents.
+
 
 ## Improve Java builds with build caches
 
