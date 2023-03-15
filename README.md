@@ -80,11 +80,28 @@ Once built, our images are deployed to a ![quay](https://quay.io) repository. Th
 
 Most of our projects create a Docker container. Some of them are based on images which you can find on ![dockerhub](https://hub.docker.com/) and some other are based on images we build internally. Every time a parent image is updated, we want to build a new version of the downstream image to make sure we include all the latest security patches.
 
-// TODO Reformulate next paragraph:
-To achieve this task, we created a Python tool which analyzes the list of projects that build containers and creates a build dependency tree by reverse engineering the list of Docker parents.
+A dedicated program in Python was written to take care of creating and ordering the list of the dependencies between all the projects, according the container images built and the inheritance between those. This program loops over all projects belonging to pre-specified groups that we manage and analyzes the Dockerfile. 2 dependency tree are built during the process:
+- 1 tree containing the mapping of Gitlab projects to containers images it creates
+- another tree container the mapping between a container image and the container image it inherits from.
 
+//TODO Include images of dependency trees
 
-## Improve Java builds with build caches
+Merging those 2 trees together allows us to know which Gitlab project depends on which other one and therefore, which downstream projects should be rebuilt, after a successful build of a specific project.
+
+The Python program adds or updates then a file containing the list of the downstream projects to trigger after a build in every concerned projects it loops over.
+
+Finally, the code of the pipeline has been adapted to search for this particular file and loop over its entries after a successful build to trigger a build on every single listed project inheriting the current one in the current branch.
+
+## Improve Maven Java builds with build caches
+
+Maven is a wonderful tool allowing you to manage and download automatically all dependencies you defined for your project.
+When the build is running on Gitlab, it can run on different runners each time and therefore, might download hundreds of megabytes
+every single time the build runs.
+To mitigate this problem, we can make use of the cache functionality. To do so, we define the `.m2/repository` directory to be cached.
+The very first time it will run, all dependencies will be downloaded by Maven. Then, those dependencies will be archived and stored.
+During every single next build, this archive will be first expanded and all the previously downloaded dependencies will be made available
+to the Maven tool. The later will only have to check and download for updates, if any.
+This saves up sometimes more than 30 min per build for projects with a lot of dependencies.
 
 # What could be improved
 
