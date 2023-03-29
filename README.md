@@ -50,9 +50,12 @@ One of the most know static analysis application is ![Sonarqube](https://www.son
 existing development environment. ![Gitlab](https://about.gitlab.com), an end-to-end software development platform, integrates natively security testing
 plugins which we just need to activate to get security results aggregated into the dedicated dashboard.
 
-// TODO include image of dashboard
+![Gitlab Security Dashboard](./Gitlab_sec_dashboard.png)
 
 Those results can eventually be pulled via the Gitlab API and included into your own customized pipelines.
+
+![Gitlab Security Pipeline](./Gitlab_sec_pipeline.png)
+
 Doing so, you can define your own ![quality gates](https://docs.sonarqube.org/latest/user-guide/quality-gates/)
 
 ## Build docker images with Kaniko
@@ -84,7 +87,7 @@ A dedicated program in Python was written to take care of creating and ordering 
 - 1 tree containing the mapping of Gitlab projects to containers images it creates
 - another tree container the mapping between a container image and the container image it inherits from.
 
-//TODO Include images of dependency trees
+![Dependencies tree](./Build-dependencies-tree.png)
 
 Merging those 2 trees together allows us to know which Gitlab project depends on which other one and therefore, which downstream projects should be rebuilt, after a successful build of a specific project.
 
