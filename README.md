@@ -11,6 +11,13 @@ But more frequent deployments also implies a more complex and dynamic process.
 
 In this article, we will discuss a concrete case, developed for one of our main clients.
 
+1. [General principles of the CICD pipelines](#General-principles-of-the-CICD-pipelines)
+2. [Detect vulnerabilities in the source code, SAST and DAST](#Detect-vulnerabilities-in-the-source-code,-SAST-and-DAST)
+3. [Build docker images with Kaniko](#Build-Docker-images-with-Kaniko)
+4. [Detect vulnerabilities in the Docker containers](#Detect-vulnerabilities-in-the-Docker-containers)
+5. [Manage Docker build dependencies](#Manage-Docker-build-dependencies)
+6. [Improve Maven Java builds with build caches](#Improve-Maven-Java-builds-with-build-caches)
+
 ## General principles of the CICD pipelines
 
 ### The development stages
@@ -21,7 +28,7 @@ We have 4 different stages on 4 corresponding environments:
 - staging: where software components are deployed in a prod-like environment
 - prod: the stable environment that can be accessed by the final users.
 
-TODO include image distinct stages
+![Stages and environments](C2C-Blog-article_Stages.png)
 
 The application is deployed successively from the development environment to the production environment
 following a fixed process.
@@ -105,6 +112,10 @@ The very first time it will run, all dependencies will be downloaded by Maven. T
 During every single next build, this archive will be first expanded and all the previously downloaded dependencies will be made available
 to the Maven tool. The later will only have to check and download for updates, if any.
 This saves up sometimes more than 30 min per build for projects with a lot of dependencies.
+
+# Conclusion
+
+In this article 
 
 # What could be improved
 
