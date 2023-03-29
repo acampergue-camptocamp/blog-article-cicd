@@ -89,7 +89,7 @@ A dedicated program in Python was written to take care of creating and ordering 
 
 ![Dependencies tree](./Build-dependencies-tree.png)
 
-Merging those two trees together allows us to know which Gitlab project depends on which other one and therefore, which downstream projects should be rebuild, after a successful build of a specific project
+Merging those two trees together allows us to know which Gitlab project depends on which other one and therefore, which downstream projects should be rebuilt, after a successful build of a specific project
 
 The Python program then adds or updates a file containing the list of the downstream projects to trigger after a build in every concerned projects it loops over.
 
