@@ -1,6 +1,6 @@
 # Build and deploy pipelines
 
-Building a deploying multiple versions of software components changed dramatically in the last years.
+Building and deploying multiple versions of software components changed dramatically in the last years.
 Where we sometimes could have as few as one deployment per quarter, it's now frequent to see several deployments a day.
 
 More frequent deployments means more frequent testing, from the development team as well as from the final users.
@@ -71,33 +71,33 @@ To simplify the whole process and allow developers to specify their build parame
 custom process that analyzes the `docker-compose.yaml` to extract the build information : image name, image tag, build variables, etc.
 Once the required information are acquired, we create a ![dynamic child pipeline](https://docs.gitlab.com/ee/ci/pipelines/downstream_pipelines.html#dynamic-child-pipelines) which is gonna take care of the build of the image.
 
-Dynamic Child Pipelines is a version of child pipelines wherein the child pipeline can be generated within a job or a set of jobs in the parent pipeline. The parent pipeline must put the generated CI configuration in an artifact, and then the trigger job refers to that artifact to tell the CI system what to run.
+Dynamic Child Pipelines are a version of child pipelines wherein the child pipeline can be generated within a job or a set of jobs in the parent pipeline. The parent pipeline must put the generated CI configuration in an artifact, and then the trigger job refers to that artifact to tell the CI system what to run.
 
-In a nutshell, our pipeline reads the docker-compose.yml file to get build information which will be passed to Kaniko in order the Build the Dockerfile present in your project.
+In a nutshell, our pipeline reads the docker-compose.yml file to get build information which will be passed to Kaniko in order to build the Dockerfile present in your project.
 
 ## Detect vulnerabilities in the Docker containers
 
-Once built, our images are deployed to a ![quay](https://quay.io) repository. This tool already includes the feature of analysing the container layers against know vulnerabilities. In our pipelines, we implemented a python script which request the results of this analysis, what allow us to define some quality-gates in the deployment process. We can for example prevent any image with know severe vulnerabilities to be deployed in any of our environments.
+Once built, our images are deployed to a ![quay](https://quay.io) repository. This tool already includes the feature of analysing the container layers against know vulnerabilities. In our pipelines, we implemented a python script which requests the results of this analysis, what allows us to define some quality-gates in the deployment process. We can for example prevent any image with know severe vulnerabilities to be deployed in any of our environments.
 
 ## Manage Docker build dependencies
 
-Most of our projects create a Docker container. Some of them are based on images which you can find on ![dockerhub](https://hub.docker.com/) and some other are based on images we build internally. Every time a parent image is updated, we want to build a new version of the downstream image to make sure we include all the latest security patches.
+Most of our projects create a Docker container. Some of them are based on images which you can find on ![dockerhub](https://hub.docker.com/) and some others are based on images we build internally. Every time a parent image is updated, we want to build a new version of the downstream image to make sure we include all the latest security patches.
 
-A dedicated program in Python was written to take care of creating and ordering the list of the dependencies between all the projects, according the container images built and the inheritance between those. This program loops over all projects belonging to pre-specified groups that we manage and analyzes the Dockerfile. 2 dependency tree are built during the process:
-- 1 tree containing the mapping of Gitlab projects to containers images it creates
-- another tree container the mapping between a container image and the container image it inherits from.
+A dedicated program in Python was written to take care of creating and ordering the list of the dependencies between all the projects, according to the container images built and the inheritance between those. This program loops over all projects belonging to pre-specified groups that we manage and analyzes the Dockerfile. Two dependency trees are built during the process:
+- one tree containing the mapping of Gitlab projects to containers images it creates
+- another tree containing the mapping between a container image and the container image it inherits from.
 
 ![Dependencies tree](./Build-dependencies-tree.png)
 
-Merging those 2 trees together allows us to know which Gitlab project depends on which other one and therefore, which downstream projects should be rebuilt, after a successful build of a specific project.
+Merging those two trees together allows us to know which Gitlab project depends on which other one and therefore, which downstream projects should be rebuild, after a successful build of a specific project
 
-The Python program adds or updates then a file containing the list of the downstream projects to trigger after a build in every concerned projects it loops over.
+The Python program then adds or updates a file containing the list of the downstream projects to trigger after a build in every concerned projects it loops over.
 
 Finally, the code of the pipeline has been adapted to search for this particular file and loop over its entries after a successful build to trigger a build on every single listed project inheriting the current one in the current branch.
 
 ## Improve Maven Java builds with build caches
 
-Maven is a wonderful tool allowing you to manage and download automatically all dependencies you defined for your project.
+Maven is a wonderful tool allowing you to manage and download automatically all the dependencies you defined for your project.
 When the build is running on Gitlab, it can run on different runners each time and therefore, might download hundreds of megabytes
 every single time the build runs.
 To mitigate this problem, we can make use of the cache functionality. To do so, we define the `.m2/repository` directory to be cached.
