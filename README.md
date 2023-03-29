@@ -28,8 +28,6 @@ We have 4 different stages on 4 corresponding environments:
 - staging: where software components are deployed in a prod-like environment
 - prod: the stable environment that can be accessed by the final users.
 
-![Stages and environments](C2C-Blog-article_Stages.png)
-
 The application is deployed successively from the development environment to the production environment
 following a fixed process.
 
