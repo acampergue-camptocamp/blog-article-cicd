@@ -113,8 +113,9 @@ This saves up sometimes more than 30 min per build for projects with a lot of de
 
 # Conclusion
 
-In this article 
+In this article we described some general principles of a good CICD pipeline and discussed more specific implementation details like different types of security scanning and build optimizations.
 
-# What could be improved
+There are still a lot of improvements that could be brought to such build and deployment pipelines. We could for example dynamically create test environments for each feature branch or bug fix, containing only those specific changes, in order to test them independently from any other modifications that could have be brought to a shared integration platform.
+We could also create dedicated sandbox environments for every single developer, where he would be free to test anything without causing any damage to the shared environments.
 
-Test environments dynamically created for each test, each branch, each feature, each bug fix
+A lot of other improvements can be thought of and what you'll be able implement yourself will often depend on the resources and time you have!
