@@ -12,7 +12,7 @@ But more frequent deployments also implies a more complex and dynamic process.
 In this article, we will discuss a concrete case, developed for one of our main clients.
 
 1. [General principles of the CICD pipelines](#General-principles-of-the-CICD-pipelines)
-2. [Detect vulnerabilities in the source code, SAST and DAST](#Detect-vulnerabilities-in-the-source-code,-SAST-and-DAST)
+2. [Detect vulnerabilities in the source code, SAST and DAST](#detect-vulnerabilities-in-the-source-code-sast-and-dast)
 3. [Build docker images with Kaniko](#Build-Docker-images-with-Kaniko)
 4. [Detect vulnerabilities in the Docker containers](#Detect-vulnerabilities-in-the-Docker-containers)
 5. [Manage Docker build dependencies](#Manage-Docker-build-dependencies)
