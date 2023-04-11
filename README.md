@@ -78,6 +78,11 @@ To simplify the whole process and allow developers to specify their build parame
 custom process that analyzes the `docker-compose.yaml` to extract the build information : image name, image tag, build variables, etc.
 Once the required information are acquired, we create a ![dynamic child pipeline](https://docs.gitlab.com/ee/ci/pipelines/downstream_pipelines.html#dynamic-child-pipelines) which is gonna take care of the build of the image.
 
+We decided to use the format of `docker-compose` as a DevOps interface because :
+- it is widely used as a standard among developers that are running the containers on their workstations. Therefore the pipeline should support it as well.
+- it allows the developer to pass build parameters into the build pipeline.
+- it allows to build several images from a single Gitlab project.
+
 Dynamic Child Pipelines are a version of child pipelines wherein the child pipeline can be generated within a job or a set of jobs in the parent pipeline. The parent pipeline must put the generated CI configuration in an artifact, and then the trigger job refers to that artifact to tell the CI system what to run.
 
 In a nutshell, our pipeline reads the docker-compose.yml file to get build information which will be passed to Kaniko in order to build the Dockerfile present in your project.
