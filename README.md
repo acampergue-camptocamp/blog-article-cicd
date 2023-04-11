@@ -85,7 +85,7 @@ We decided to use the format of `docker-compose` as a DevOps interface because :
 
 Dynamic Child Pipelines are a version of child pipelines wherein the child pipeline can be generated within a job or a set of jobs in the parent pipeline. The parent pipeline must put the generated CI configuration in an artifact, and then the trigger job refers to that artifact to tell the CI system what to run.
 
-In a nutshell, our pipeline reads the docker-compose.yml file to get build information which will be passed to Kaniko in order to build the Dockerfile present in your project.
+In a nutshell, our pipeline reads the `docker-compose.yml` file to get build information which will be passed to Kaniko in order to build the Dockerfile present in your project.
 
 ## Detect vulnerabilities in the Docker containers
 
