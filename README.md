@@ -55,6 +55,8 @@ One of the most know static analysis application is ![Sonarqube](https://www.son
 existing development environment. ![Gitlab](https://about.gitlab.com), an end-to-end software development platform, integrates natively security testing
 plugins which we just need to activate to get security results aggregated into the dedicated dashboard.
 
+Once the Gitlab plugins are activated, the vulnerability report can be reviewed directly via Gitlab's interface.
+
 ![Gitlab Security Dashboard](./Gitlab_sec_dashboard.png)
 
 Those results can eventually be pulled via the Gitlab API and included into your own customized pipelines.
