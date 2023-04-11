@@ -89,7 +89,7 @@ In a nutshell, our pipeline reads the `docker-compose.yml` file to get build inf
 
 ## Detect vulnerabilities in the Docker containers
 
-Once built, our images are deployed to a ![quay](https://quay.io) repository. This tool already includes the feature of analysing the container layers against know vulnerabilities. In our pipelines, we implemented a python script which requests the results of this analysis, what allows us to define some quality-gates in the deployment process. We can for example prevent any image with know severe vulnerabilities to be deployed in any of our environments.
+Once built, our images are deployed to a ![quay](https://quay.io) registry. This tool already includes the feature of analysing the container layers against know vulnerabilities. In our pipelines, we implemented a python script which requests the results of this analysis, what allows us to define some quality-gates in the deployment process. We can for example prevent any image with know severe vulnerabilities to be deployed in any of our environments.
 
 ## Manage Docker build dependencies
 
