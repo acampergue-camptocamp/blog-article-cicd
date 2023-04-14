@@ -93,19 +93,20 @@ Once built, our images are deployed to a ![quay](https://quay.io) registry. This
 
 ## Manage Docker build dependencies
 
-Most of our projects create a Docker container. Some of them are based on images which you can find on ![dockerhub](https://hub.docker.com/) and some others are based on images we build internally. Every time a parent image is updated, we want to build a new version of the downstream image to make sure we include all the latest security patches.
+In most of our projects, we create Docker containers, either based on images from ![DockerHub](https://hub.docker.com/) or internally built images. To ensure that our downstream images include all the latest security patches, we need to build a new version of the downstream image every time an upstream parent image is updated.
 
-A dedicated program in Python was written to take care of creating and ordering the list of the dependencies between all the projects, according to the container images built and the inheritance between those. This program loops over all projects belonging to pre-specified groups that we manage and analyzes the Dockerfile. Two dependency trees are built during the process:
-- one tree containing the mapping of Gitlab projects to containers images it creates
-- another tree containing the mapping between a container image and the container image it inherits from.
+To achieve this, we use a GitOps approach : GitOps is a software development methodology that uses Git as the single source of truth for declarative infrastructure and application configuration. It involves using Git to store and manage the desired state of infrastructure and applications, and using automated processes to continuously synchronize the actual state with the desired state. This allows for efficient and consistent management of infrastructure and applications across different environments, and enables faster and more reliable delivery of software.
+
+Following this GitOps approach, we create a file named `.parent-images/<image-name>-<commit>` that links the upstream image to the code repository. This allows us to trigger a build automatically every time a new commit is made to the repository, ensuring that our downstream images are always up to date.
+
+To manage the dependencies between our projects and containers, we developed a dedicated Python program. The program analyzes the Dockerfile of each project in pre-specified groups, building two dependency trees: one mapping GitLab projects to the container images they create, and another mapping container images to their parent images. By merging these two trees, we can determine which GitLab projects depend on which other projects and therefore, which downstream projects need to be rebuilt after a successful build of a specific project.
 
 ![Dependencies tree](./Build-dependencies-tree.png)
 
-Merging those two trees together allows us to know which Gitlab project depends on which other one and therefore, which downstream projects should be rebuilt, after a successful build of a specific project
+The Python program then adds or updates the "projects-to-trigger.txt" file, which contains the list of downstream projects to be triggered after a build in every affected project.
+After a successful build, the pipeline reads the "projects-to-trigger.txt" file and loops over its entries. This creates or updates the `.parent-images/<image-name>-<commit>` file in every downstream projects listed in the file, which triggers a build on those projects
 
-The Python program then adds or updates a file containing the list of the downstream projects to trigger after a build in every concerned projects it loops over.
-
-Finally, the code of the pipeline has been adapted to search for this particular file and loop over its entries after a successful build to trigger a build on every single listed project inheriting the current one in the current branch.
+By using the GitOps methodology, we can efficiently ensure that all downstream images are updated, secure, and reflecting the latest changes made to their parent images.
 
 ## Improve Maven Java builds with build caches
 
